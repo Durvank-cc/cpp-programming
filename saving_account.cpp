@@ -3,58 +3,95 @@ using namespace std;
 
 class SavingAccount
 {
+protected:
     int accNo;
     string name;
-    float balance, interestRate;
+    float balance;
+    int transactionCount;
 
 public:
 
     // Constructor
-    SavingAccount(int a, string n, float b, float i)
+    SavingAccount(int a, string n, float b)
     {
         accNo = a;
         name = n;
         balance = b;
-        interestRate = i;
+        transactionCount = 0;
     }
 
     void deposit()
     {
         float amount;
+
         cout << "Enter deposit amount: ";
         cin >> amount;
+
         balance = balance + amount;
+        transactionCount++;
+
+        cout << "Deposit successful." << endl;
     }
 
     void withdraw()
     {
         float amount;
+
         cout << "Enter withdraw amount: ";
         cin >> amount;
+
         balance = balance - amount;
+        transactionCount++;
+
+        cout << "Withdraw successful." << endl;
     }
 
-    void calculateInterest()
+    void transactionFee()
     {
-        float interest;
-        interest = balance * interestRate / 100;
-        cout << "Interest = " << interest << endl;
+        if (transactionCount > 10)
+        {
+            balance = balance - 10;
+            cout << "Transaction Fee = 10" << endl;
+        }
     }
 
     void display()
     {
-        cout << "\nAccount No: " << accNo << endl;
+        cout << "\n--- Saving Account ---" << endl;
+        cout << "Account No: " << accNo << endl;
         cout << "Name: " << name << endl;
         cout << "Balance: " << balance << endl;
-        cout << "Interest Rate: " << interestRate << "%" << endl;
+        cout << "Transactions: " << transactionCount << endl;
     }
 };
+
+
+// CheckingAccount is child of SavingAccount
+class CheckingAccount : public SavingAccount
+{
+public:
+
+    // Constructor
+    CheckingAccount(int a, string n, float b)
+        : SavingAccount(a, n, b)
+    {
+    }
+
+    void checkAccount()
+    {
+        cout << "\n--- Checking Account ---" << endl;
+        cout << "Account No: " << accNo << endl;
+        cout << "Name: " << name << endl;
+        cout << "Balance: " << balance << endl;
+    }
+};
+
 
 int main()
 {
     int accNo;
     string name;
-    float balance, interestRate;
+    float balance;
 
     cout << "Enter Account Number: ";
     cin >> accNo;
@@ -65,15 +102,16 @@ int main()
     cout << "Enter Balance: ";
     cin >> balance;
 
-    cout << "Enter Interest Rate: ";
-    cin >> interestRate;
+    CheckingAccount c(accNo, name, balance);
 
-    SavingAccount s(accNo, name, balance, interestRate);
+    // Transactions
+    c.deposit();
+    c.transactionFee();
 
-    s.deposit();
-    s.withdraw();
-    s.calculateInterest();
-    s.display();
+    c.withdraw();
+    c.transactionFee();
+
+    c.checkAccount();
 
     return 0;
 }
